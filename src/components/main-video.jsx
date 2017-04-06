@@ -18,7 +18,7 @@ export default class MainVideo extends React.Component {
 
 			if (this.script) {
 			    console.log("******************* delete script *********************");
-				this.script.parentElement.removeChild(this.script);
+				if (this.script.parentElement) { this.script.parentElement.removeChild(this.script); }
 				delete this.script;
 
 				if (this.state.threesixty) {
@@ -42,15 +42,25 @@ console.log('************* SCRIPT ***************');
 var video = document.querySelector('a-scene video');
 if (video) {
     console.log('************* VIDEO, ADDING PLAYING LISTENER ***************');
+	function setMaterialSrc(target) {
+		console.log('************* setMaterialSrc ***************');
+		document.querySelector('a-scene a-sky').setAttribute('material', 'src', target);
+	}
+
+	if (!video.paused) { 
+		console.log('************* VIDEO NOT PAUSED ***************');
+	    setMaterialSrc('#' + video.id); 
+	}
+
 	video.addEventListener('playing', (evt) => {
 		console.log('************* VIDEO PLAYING ***************');
-		document.querySelector('a-scene a-sky').setAttribute('material', 'src', evt.target);
+		setMaterialSrc('#' + evt.target.id);
 	});
 } else {
     console.log('************* NO VIDEO ***************');
 }
 `;
-				this.instance.appendChild(script);
+				if (this.instance) { this.instance.appendChild(script); }
 			}
 
 		}});
@@ -58,6 +68,8 @@ if (video) {
 	}
 
     render() {
+	  // return (<div className="main-video" />);
+
       if (!this.state.threesixty)
         return (
 			<div className="main-video">
