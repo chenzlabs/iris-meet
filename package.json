@@ -4,6 +4,7 @@
   "description": "IrisMeet",
   "main": "server/app.js",
   "scripts": {
+    "build": "gulp sass buildonce",
     "test": "npm test"
   },
   "author": "Rob Sliwa",
