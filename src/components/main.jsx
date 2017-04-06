@@ -261,6 +261,12 @@ export default withWebRTC(withRouter(class Main extends React.Component {
     });
   }
 
+  _onThreeSixty() {
+    this.setState({
+      threeSixty: !this.state.threeSixty,
+    });
+  }
+
   _onMouseMove() {
     if (this.timer) {
       clearTimeout(this.timer);
@@ -303,8 +309,9 @@ export default withWebRTC(withRouter(class Main extends React.Component {
           onCameraMute={this._onLocalVideoMute.bind(this)}
           onExpandHide={this._onExpandHide.bind(this)}
           onHangup={this._onHangup.bind(this)}
+          onThreeSixty={this._onThreeSixty.bind(this)}
         /> : null}
-      <MainVideo>
+      <MainVideo threeSixty={this.state.threeSixty}>
         {this.state.mainVideoConnection.type === 'remote' ?
           <RemoteVideo
             video={this.state.mainVideoConnection.connection.video}

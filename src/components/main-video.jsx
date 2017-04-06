@@ -3,8 +3,6 @@ import React from 'react';
 export default class MainVideo extends React.Component {
     constructor(props) {
         super(props)
-		this.state = this.state || {};
-		this.state.threesixty = true;
     }
 
 /*
@@ -20,31 +18,33 @@ export default class MainVideo extends React.Component {
 			    console.log("******************* delete script *********************");
 				if (this.script.parentElement) { this.script.parentElement.removeChild(this.script); }
 				delete this.script;
-
-				if (this.state.threesixty) {
-					// FIXME: only clear texture cache if the video source is actually changing,
-					// else it could kill currently playing video
-					console.log("******************* clearTextureCache *********************");
-					var sceneEl = document.querySelector('a-scene');
-					if (sceneEl) { sceneEl.systems.material.clearTextureCache(); }
-				}
 			}
 
-			if (this.state.threesixty && !this.script) {
+			if (!this.script) {
 			    console.log("******************* create script *********************");
 				// now that we know there will be a video,
 				// we need to get script injected to grab the reference to the one that will be in <a-assets>
 				var script = this.script = document.createElement('script');
 				script.type = 'text/javascript';
 				script.async = true;
-				script.innerHTML = `
-console.log('************* SCRIPT ***************');
-var video = document.querySelector('a-scene video');
+				if (this.props.threeSixty) {
+					script.innerHTML = `
+console.log('************* SCRIPT threeSixty ***************');
+var sceneEl = document.querySelector('a-scene');
+sceneEl.play();
+
+var video = document.querySelector('.main-video video');
 if (video) {
     console.log('************* VIDEO, ADDING PLAYING LISTENER ***************');
 	function setMaterialSrc(target) {
+
+				// FIXME: only clear texture cache if the video source is actually changing,
+				// else it could kill currently playing video
+				console.log("******************* clearTextureCache *********************");
+				sceneEl.systems.material.clearTextureCache(); 
+
 		console.log('************* setMaterialSrc ***************');
-		document.querySelector('a-scene a-sky').setAttribute('material', 'src', target);
+		document.querySelector('a-scene a-sky').setAttribute('material', 'src', '#' + document.querySelector('.main-video video').id);
 	}
 
 	if (!video.paused) { 
@@ -60,6 +60,14 @@ if (video) {
     console.log('************* NO VIDEO ***************');
 }
 `;
+				} else {
+					script.innerHTML = `
+						console.log('************* SCRIPT not threeSixty ***************');
+						var sceneEl = document.querySelector('a-scene');
+						sceneEl.pause();
+`;
+				}
+
 				if (this.instance) { this.instance.appendChild(script); }
 			}
 
@@ -68,23 +76,12 @@ if (video) {
 	}
 
     render() {
-	  // return (<div className="main-video" />);
-
-      if (!this.state.threesixty)
-        return (
-			<div className="main-video">
-				{this.props.children}
-			</div>
-		);
-
         return (
             <div className="main-video" ref={(el) => { this.instance = el; }}>
-			  <a-scene embedded debug>
-			    <a-assets>
-                  {this.props.children}
-			    </a-assets>
+			  <a-scene embedded style={this.props.threeSixty ? {zIndex: 1} : {zIndex: 0}}>
 				<a-sky rotation="0 -90 0"></a-sky>
 			  </a-scene>
+                  {this.props.children}
             </div>
         );
 

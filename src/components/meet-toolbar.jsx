@@ -8,6 +8,7 @@ export default class MeetToolbar extends React.Component {
           microphoneMuted: false,
           cameraMuted: false,
           barHidden: false,
+		  threeSixty: false,
         }
     }
 
@@ -39,6 +40,14 @@ export default class MeetToolbar extends React.Component {
       });
     }
 
+    _onThreeSixty() {
+      this.setState({
+        threeSixty: !this.state.threeSixty,
+      }, () => {
+        this.props.onThreeSixty(this.state.threeSixty);
+      });
+    }
+
     render() {
         return (
             <div id="header">
@@ -55,6 +64,7 @@ export default class MeetToolbar extends React.Component {
                       <i className="fa fa-ban fa-stack-2x text-danger" aria-hidden="true"></i>
                     </span>
                     : <i className="fa fa-camera" aria-hidden="true"></i>}</a>
+                  <a className="button" onClick={this._onThreeSixty.bind(this)}><i className="fa fa-superpowers" aria-hidden="true"></i></a>
                   <a className="button"><i className="fa fa-comments" aria-hidden="true"></i></a>
                   <a className="button"><i className="fa fa-desktop" aria-hidden="true"></i></a>
                   <a className="button" onClick={this._onExpandHide.bind(this)}><i className={this.state.barHidden ? "fa fa-expand" : "fa fa-compress"} aria-hidden="true"></i></a>
