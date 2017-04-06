@@ -33,6 +33,13 @@ console.log('************* SCRIPT threeSixty ***************');
 var sceneEl = document.querySelector('a-scene');
 sceneEl.play();
 
+function id2selector(id) {
+    if ('1234567890'.indexOf(id.substring(0,1)) >= 0) {
+        return '#\\3'+id;
+    }
+    return '#' + id;
+}
+
 var video = document.querySelector('.main-video video');
 if (video) {
     console.log('************* VIDEO, ADDING PLAYING LISTENER ***************');
@@ -44,17 +51,17 @@ if (video) {
 				sceneEl.systems.material.clearTextureCache(); 
 
 		console.log('************* setMaterialSrc ***************');
-		document.querySelector('a-scene a-sky').setAttribute('material', 'src', '#' + document.querySelector('.main-video video').id);
+		document.querySelector('a-scene a-sky').setAttribute('material', 'src', target);
 	}
 
 	if (!video.paused) { 
 		console.log('************* VIDEO NOT PAUSED ***************');
-	    setMaterialSrc('#' + video.id); 
+	    setMaterialSrc(id2selector(video.id)); 
 	}
 
 	video.addEventListener('playing', (evt) => {
 		console.log('************* VIDEO PLAYING ***************');
-		setMaterialSrc('#' + evt.target.id);
+		setMaterialSrc(id2selector(evt.target.id));
 	});
 } else {
     console.log('************* NO VIDEO ***************');
