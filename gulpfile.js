@@ -8,6 +8,9 @@ var server = require('gulp-server-livereload');
 var watchify = require('watchify');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
+var buffer = require('vinyl-buffer');
+var uglify = require('gulp-uglify');
+var sourcemaps = require('gulp-sourcemaps');
 
 var notify = function(error) {
   var message = 'File: ';
@@ -70,6 +73,29 @@ gulp.task('buildonce', function() {
     stream
       .pipe(source(entryFile))
       .pipe(rename('index.js'))
+      .pipe(gulp.dest('public/'));
+  }
+
+  rebundleonce();
+});
+
+gulp.task('dist', function() {
+  var entryFile = './src/app.jsx';
+  var bundleronce = browserify(entryFile, {extensions: [ ".js", ".jsx" ]});
+
+  bundleronce.transform(babelify);
+
+  function rebundleonce() {
+    var stream = bundleronce.bundle();
+    stream.on('error', notify);
+
+    stream
+      .pipe(source(entryFile))
+      .pipe(rename('index.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe(uglify())
+      .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest('public/'));
   }
 
