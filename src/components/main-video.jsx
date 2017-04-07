@@ -10,77 +10,55 @@ export default class MainVideo extends React.Component {
 */
 
     componentDidUpdate() {
-	    console.log("================ in componentDidUpdate =========================");
-		this.props.children.forEach(c => { if (c && c.props.video) {
-			console.log("******************* VIDEO *********************");
+        console.log("================ in componentDidUpdate =========================");
+        this.props.children.forEach(c => { if (c && c.props.video) {
+            console.log("******************* VIDEO *********************");
 
-			if (this.script) {
-			    console.log("******************* delete script *********************");
-				if (this.script.parentElement) { this.script.parentElement.removeChild(this.script); }
-				delete this.script;
-			}
+            if (this.script) {
+                if (this.script.parentElement) { this.script.parentElement.removeChild(this.script); }
+                delete this.script;
+            }
 
-			if (!this.script) {
-			    console.log("******************* create script *********************");
-				// now that we know there will be a video,
-				// we need to get script injected to grab the reference to the one that will be in <a-assets>
-				var script = this.script = document.createElement('script');
-				script.type = 'text/javascript';
-				script.async = true;
-				if (this.props.threeSixty) {
-					script.innerHTML = `
+            if (!this.script) {
+                // now that we know there will be a video,
+                // we need to get script injected to grab the reference to the one that will be in <a-assets>
+                var script = this.script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                if (this.props.threeSixty) {
+                    script.innerHTML = `
 console.log('************* SCRIPT threeSixty ***************');
 var sceneEl = document.querySelector('a-scene');
 sceneEl.play();
 
-function id2selector(id) {
-    if ('1234567890'.indexOf(id.substring(0,1)) >= 0) {
-        return '#\\3'+id;
-    }
-    return '#' + id;
+function setMaterialSrc(target) {
+    // FIXME: only clear texture cache if the video source is actually changing,
+    // else it could kill currently playing video
+    sceneEl.systems.material.clearTextureCache(); 
+    document.querySelector('a-scene a-sky').setAttribute('material', 'src', target);
 }
+
+function id2selector(id) { return ('1234567890'.indexOf(id.substring(0,1)) >= 0 ? '#\\3' : '#') + id; }
 
 var video = document.querySelector('.main-video video');
 if (video) {
-    console.log('************* VIDEO, ADDING PLAYING LISTENER ***************');
-	function setMaterialSrc(target) {
-
-				// FIXME: only clear texture cache if the video source is actually changing,
-				// else it could kill currently playing video
-				console.log("******************* clearTextureCache *********************");
-				sceneEl.systems.material.clearTextureCache(); 
-
-		console.log('************* setMaterialSrc ***************');
-		document.querySelector('a-scene a-sky').setAttribute('material', 'src', target);
-	}
-
-	if (!video.paused) { 
-		console.log('************* VIDEO NOT PAUSED ***************');
-	    setMaterialSrc(id2selector(video.id)); 
-	}
-
-	video.addEventListener('playing', (evt) => {
-		console.log('************* VIDEO PLAYING ***************');
-		setMaterialSrc(id2selector(evt.target.id));
-	});
-} else {
-    console.log('************* NO VIDEO ***************');
+    if (!video.paused) { setMaterialSrc(id2selector(video.id)); }
+    video.addEventListener('playing', (evt) => { setMaterialSrc(id2selector(evt.target.id)); });
 }
 `;
-				} else {
-					script.innerHTML = `
-						console.log('************* SCRIPT not threeSixty ***************');
-						var sceneEl = document.querySelector('a-scene');
-						sceneEl.pause();
+                } else {
+                    script.innerHTML = `
+console.log('************* SCRIPT not threeSixty ***************');
+var sceneEl = document.querySelector('a-scene');
+sceneEl.pause();
 `;
-				}
+                }
 
-				if (this.instance) { this.instance.appendChild(script); }
-			}
-
-		}});
-	    console.log("================ out componentDidUpdate =========================");	
-	}
+                if (this.instance) { this.instance.appendChild(script); }
+            }
+        }});
+        console.log("================ out componentDidUpdate =========================");
+    }
 
     render() {
         return (
