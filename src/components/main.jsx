@@ -202,7 +202,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
       console.log(requestedResolution);
       if (!validResolution(requestedResolution)) {
         console.log('Requested resolution is not valid.  Switching to default hd.');
-        requestedResolution = '640';
+        requestedResolution = 'hd';
       }
       getRoomId(UserStore.room, UserStore.token)
       .then((response) => {
@@ -214,7 +214,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
             eventManagerUrl: Config.eventManagerUrl,
             notificationServer: Config.notificationServer },
             UserStore.token,
-            '640',
+            'hd',
             true
           );
       })
