@@ -2,11 +2,32 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './horizontal-box.css'
 
-const HorizontalBoxComponent = ({children, onClick}) => (
-    <div className="horizontal-box" onClick={onClick}>
-      {children}
-    </div>
-  );
+const HorizontalBoxComponent = ({children, onClick}) => {
+  var vr = true;
+  if (!vr) {
+    return (
+      <div className="horizontal-box" onClick={onClick}>
+        {children}
+      </div>
+    );
+  }
+
+  // Find the video (if any) in the children we've been asked to display
+  var video;
+  var el = children;
+    if (el && el.props.video && el.props.video.track && el.props.video.track.containers) { 
+      video = el.props.video.track.containers[0]; 
+    }
+  if (!video) {
+    // no video?  show sky color
+    return (<a-plane class=".horizontal-box" position="0 0 -1.8" color="#3CF" onClick={onClick}>{children}</a-plane>);
+  } else {
+    // show video as sky, or plane
+    var videoSelector = video ? '#' + video.id : '';
+    // if (threeSixty) { return (<a-sky class=".horizontal-box" rotation="0 -90 0" src={videoSelector}>{children}</a-sky>); }
+    return (<a-plane class=".horizontal-box" position="0 0 -1.8" src={videoSelector} onClick={onClick}>{children}</a-plane>);
+  }
+}
 
 HorizontalBoxComponent.propTypes = {
   children: PropTypes.element.isRequired,

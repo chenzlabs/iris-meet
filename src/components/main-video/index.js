@@ -3,24 +3,29 @@ import PropTypes from 'prop-types'
 import './main-video.css'
 
 const MainVideo = ({children, threeSixty}) => {
-    if (!threeSixty) { return (<div className="main-video">{children}</div>); }
+    var vr = true;
+    if (!vr) {
+      // TODO: put back the inline 360 view functionality, if we care
+      return (<div className="main-video">{children}</div>);
+    }
 
-    var video = document.querySelector('.main-video video');
-    if (video) {
-      // show video as sky
-      var videoSelector = video ? '#' + video.id : '';
-      return (<div className="main-video">
-        <a-scene embedded style={threeSixty ? {zIndex: 1} : {zIndex: 0}}>
-          <a-sky rotation="0 -90 0" src={videoSelector}></a-sky>
-        </a-scene>
-          {children}</div>);
-    } else {
+    // Find the video (if any) in the children we've been asked to display
+    var video;
+    children.forEach(function (el) {
+      if (el && el.props.video && el.props.video.track && el.props.video.track.containers) { 
+        video = el.props.video.track.containers[0]; 
+      }
+    });
+    if (!video) {
       // no video?  show sky color
-      return (<div className="main-video">
-        <a-scene embedded style={threeSixty ? {zIndex: 1} : {zIndex: 0}}>
-          <a-sky rotation="0 -90 0" color="#3CF"></a-sky>
-        </a-scene>
-          {children}</div>);
+      return (
+          <a-sky class=".main-video" rotation="0 -90 0" color="#3CF">
+          {children}</a-sky>);
+    } else {
+      // show video as sky, or plane
+      var videoSelector = video ? '#' + video.id : '';
+      if (threeSixty) { return (<a-sky class=".main-video" rotation="0 -90 0" src={videoSelector}>{children}</a-sky>); }
+      return (<a-plane class=".main-video" scale="4.8 2.7 1" position="0 1.6 -2" src={videoSelector}>{children}</a-plane>);
     }
 };
 

@@ -12,9 +12,15 @@
     <!--<link rel="stylesheet" href="style.css">-->
     <script src="https://rawgit.com/chenzlabs/aframe/master/dist/aframe-master.min.js"></script>
     <style>
+        /* for VR, hide the 2D elements in favor of A-Frame representations */
+        .main-video, .later-toolbarShow, .videoBarShow { visibility:hidden !important; }
+
+        /* not sure if these are still needed if we keep the videoBar hidden */
         .horizontal-box video { pointer-events: all; }
         #footer { pointer-events: none; }
-        .a-enter-vr.embedded { position: fixed; }
+
+        /* make sure A-Frame scene takes up fullscreen, or else enter-VR button won't show */
+        a-scene { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
     </style>
 </head>
 <body>
