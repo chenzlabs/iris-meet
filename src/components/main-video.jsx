@@ -38,12 +38,13 @@ function setMaterialSrc(target) {
     document.querySelector('a-scene a-sky').setAttribute('material', 'src', target);
 }
 
-function id2selector(id) { return ('1234567890'.indexOf(id.substring(0,1)) >= 0 ? '#\\3' : '#') + id; }
+function id2selector(id) { return '#' + id; }
 
-var video = document.querySelector('.main-video video');
+var videoSelector = '.main-video video';
+var video = document.querySelector(videoSelector);
 if (video) {
     if (!video.paused) { setMaterialSrc(id2selector(video.id)); }
-    video.addEventListener('playing', (evt) => { setMaterialSrc(id2selector(evt.target.id)); });
+    video.addEventListener('playing', (evt) => { setMaterialSrc(id2selector(video.id)); });
 }
 `;
                 } else {
