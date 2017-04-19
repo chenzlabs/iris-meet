@@ -98,7 +98,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
       // we don't create one
       let routingId = null; //localStorage.getItem('irisMeet.routingId');
       if (routingId === null) {
-        routingId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});
+        routingId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c==='x'?r:(r&0x3)|0x8;return v.toString(16);});
         localStorage.setItem('irisMeet.routingId', routingId);
       }
       UserActions.loginUser(userName, routingId, this.props.params.roomname);
@@ -216,7 +216,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
       console.log(requestedResolution);
       if (!validResolution(requestedResolution)) {
         console.log('Requested resolution is not valid.  Switching to default hd.');
-        requestedResolution = '640';
+        requestedResolution = 'hd';
       }
       getRoomId(UserStore.room, UserStore.token)
       .then((response) => {
@@ -247,7 +247,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
     //e.stopPropagation();
     let routingId = null; //localStorage.getItem('irisMeet.routingId');
     if (routingId === null) {
-      routingId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});
+      routingId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c==='x'?r:(r&0x3)|0x8;return v.toString(16);});
       localStorage.setItem('irisMeet.routingId', routingId);
     }
     const userName = this.refs.loginpanel.userName ? this.refs.loginpanel.userName : localStorage.getItem('irisMeet.userName');
@@ -273,6 +273,12 @@ export default withWebRTC(withRouter(class Main extends React.Component {
   _onExpandHide() {
     this.setState({
       isVideoBarHidden: !this.state.isVideoBarHidden,
+    });
+  }
+
+  _onThreeSixty() {
+    this.setState({
+      threeSixty: !this.state.threeSixty,
     });
   }
 
@@ -318,8 +324,9 @@ export default withWebRTC(withRouter(class Main extends React.Component {
           onCameraMute={this._onLocalVideoMute.bind(this)}
           onExpandHide={this._onExpandHide.bind(this)}
           onHangup={this._onHangup.bind(this)}
+          onThreeSixty={this._onThreeSixty.bind(this)}
         /> : null}
-      <MainVideo>
+      <MainVideo threeSixty={this.state.threeSixty}>
         {this.state.mainVideoConnection.type === 'remote' ?
           <RemoteVideo
             video={this.state.mainVideoConnection.connection.video}
@@ -351,8 +358,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
             console.log('REMOTE CONNECTION');
             console.log(connection);
             console.log(connection.track.getParticipantId());
-            if (connection.video) {
-              return (
+            return connection.video ? (
                 <HorizontalBox
                   key={connection.video.index}
                   type='remote'
@@ -360,8 +366,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
                 >
                   <RemoteVideo key={connection.video.index} video={connection.video} audio={connection.audio} />
                 </HorizontalBox>
-              );
-            }
+              ) : null;
           })}
       </HorizontalWrapper>
       {this.state.showUser || this.state.showRoom ?

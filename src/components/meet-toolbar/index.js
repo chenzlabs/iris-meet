@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './meet-toolbar.css'
 
-const MeetToolbarComponent = ({isHidden, _onMicrophoneMute, microphoneMuted, _onCameraMute, cameraMuted, _onExpandHide, barHidden, _onHangup }) => (
+const MeetToolbarComponent = ({isHidden, _onMicrophoneMute, microphoneMuted, _onCameraMute, cameraMuted, _onExpandHide, barHidden, _onHangup, threeSixty, _onThreeSixty}) => (
   <div id="header">
     <span id="toolbar" className={isHidden ? "toolbarHide" : "toolbarShow"}>
       <a className="button" onClick={_onMicrophoneMute.bind(this)}>{microphoneMuted ?
@@ -17,6 +17,7 @@ const MeetToolbarComponent = ({isHidden, _onMicrophoneMute, microphoneMuted, _on
           <i className="fa fa-ban fa-stack-2x text-danger" aria-hidden="true"></i>
         </span>
         : <i className="fa fa-camera" aria-hidden="true"></i>}</a>
+      <a className="button" onClick={_onThreeSixty.bind(this)}><i aria-hidden="true">{threeSixty ? "2D" : "360"}</i></a>
       <a className="button"><i className="fa fa-comments" aria-hidden="true"></i></a>
       <a className="button"><i className="fa fa-desktop" aria-hidden="true"></i></a>
       <a className="button" onClick={_onExpandHide.bind(this)}><i className={barHidden ? "fa fa-expand" : "fa fa-compress"} aria-hidden="true"></i></a>
@@ -35,7 +36,9 @@ MeetToolbarComponent.propTypes = {
   cameraMuted: PropTypes.bool.isRequired,
   _onExpandHide: PropTypes.func.isRequired,
   barHidden: PropTypes.bool.isRequired,
-  _onHangup: PropTypes.func.isRequired
+  _onHangup: PropTypes.func.isRequired,
+  threeSixty: PropTypes.bool.isRequired,
+  _onThreeSixty: PropTypes.func.isRequired
 }
 
 

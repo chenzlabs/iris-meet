@@ -9,6 +9,7 @@ export default class MeetToolbar extends React.Component {
           microphoneMuted: false,
           cameraMuted: false,
           barHidden: false,
+          threeSixty: props.threeSixty || false
         }
     }
 
@@ -29,7 +30,15 @@ export default class MeetToolbar extends React.Component {
     }
 
     _onHangup() {
-      this.props.onHangup();
+        this.props.onHangup();
+    }
+
+    _onThreeSixty() {
+        this.setState({
+            threeSixty: !this.state.threeSixty,
+        }, () => {
+            this.props.onThreeSixty();
+        });
     }
 
     _onExpandHide() {
@@ -51,6 +60,8 @@ export default class MeetToolbar extends React.Component {
           _onExpandHide={this._onExpandHide.bind(this)}
           barHidden={this.state.barHidden}
           _onHangup={this._onHangup.bind(this)}
+          threeSixty={this.state.threeSixty}
+          _onThreeSixty={this._onThreeSixty.bind(this)}
         />
       )
     }
