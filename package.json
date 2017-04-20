@@ -5,6 +5,7 @@
   "author": "Rob Sliwa",
   "license": "MIT",
   "main": "server/app.js",
+  "homepage": ".",
   "dependencies": {
     "flux": "^2.1.1",
     "font-awesome": "^4.3.0",
