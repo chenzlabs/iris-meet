@@ -228,7 +228,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
             eventManagerUrl: Config.eventManagerUrl,
             notificationServer: Config.notificationServer },
             UserStore.token,
-            '640',
+            requestedResolution,
             true,
             true
           );
