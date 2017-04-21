@@ -23,6 +23,30 @@
         a-scene { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
     </style>
 
+<!-- for arrow key rotation -->
+<script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v2.7.3/dist/aframe-extras.controls.min.js"></script>
+<script>
+    var PiBy180 = Math.PI / 180.0;
+
+    // allow arrow keys toperform rotation
+    // NOTE: should really be in its own component JS file
+    AFRAME.registerComponent('arrow-key-rotation', {
+        // needs keyboard-controls from donmccurdy's extras
+        dependencies: ['keyboard-controls'],
+        schema: {},
+        tick: function (time, timeDelta) {
+            var kc = this.el.components['keyboard-controls'];
+            if (kc && kc.isVelocityActive()) {
+                var data = kc.getVelocityDelta();
+                var object3D = this.el.object3D;
+                object3D.rotationAutoUpdate = false;
+                object3D.rotation.x -= data.z * PiBy180;
+                object3D.rotation.y -= data.x * PiBy180;
+            }
+        }
+    });
+</script>
+
 <!-- make tracked controllers emit cursor events on down/up events -->
 <script>
   AFRAME.registerComponent('controller-cursor', {
@@ -62,22 +86,23 @@
 <script>
   AFRAME.registerComponent('which-controller-present', {
     init: function () {
-      this.el.addEventListener('componentinitialized', (function (evt) {
+      var self = this;
+      this.el.addEventListener('componentinitialized', function (evt) {
         if (evt.detail.name !== 'tracked-controls') { return; }
         // Determine which, if any, higher level controller component says controllerPresent.
         // WARNING!  If a dummy tracked-controls instance is already present,
         // then componentinitialized may not fire for true injection!
-        Object.keys(this.el.components).forEach(function (name) {
-          const component = this.el.components[name];
+        Object.keys(self.el.components).forEach(function (name) {
+          const component = self.el.components[name];
           if (component.controllerPresent) {
             // Log name, component data, and tracked-controls data.
             console.log(name + ' ' +  JSON.stringify(component.data) + ' => ' + JSON.stringify(evt.detail.data));
             
             // Emit controllerpresent event.
-            this.el.emit('controllerpresent', {name: name, component: component});
+            self.el.emit('controllerpresent', {name: name, component: component});
           }
         });
-      }).bind(this));
+      });
     }
   });
 </script>
@@ -98,7 +123,7 @@ AFRAME.registerComponent('controller-cursor-if-present', {
     var el = this.el;
     el.addEventListener('controllerpresent', function (evt) {
       // Since we have a controller, add raycaster and controller cursor.
-      evt.target.setAttribute('raycaster', 'far:100; interval:250; objects:.clickable');
+      evt.target.setAttribute('raycaster', 'far:100; interval:250');
       evt.target.setAttribute('controller-cursor', '');
       var indicator = document.createElement('a-box');
       indicator.setAttribute('position', '0 0 -10');

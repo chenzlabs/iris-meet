@@ -335,11 +335,13 @@ export default withWebRTC(withRouter(class Main extends React.Component {
         return (
           <div onMouseMove={this._onMouseMove.bind(this)}>
           <a-scene>
-          <a-camera wasd-controls-enabled="false">
-  <a-entity cursor="fuse: true; fuseTimeout: 2000"
+          <a-camera wasd-controls-enabled="false" arrow-key-rotation>
+  <a-entity id="camera-cursor" 
+            cursor="fuse:true; fuseTimeout:2000"
+            raycaster="far:100; interval:250"
             position="0 0 -1"
-            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-            material="color: blue; shader: flat">
+            geometry="primitive:ring; radiusInner:0.02; radiusOuter:0.03"
+            material="color:blue; shader:flat">
         <a-animation begin="mouseleave" easing="ease-in" attribute="scale" dur="100"
                fill="forwards" from="0.2 0.2 0.2" to="1 1 1"></a-animation>
         <a-animation begin="click" easing="ease-in" attribute="scale" dur="100"
@@ -348,16 +350,20 @@ export default withWebRTC(withRouter(class Main extends React.Component {
                fill="forwards" from="1 1 1" to="0.2 0.2 0.2"></a-animation>
   </a-entity>
           </a-camera>
-          <a-entity id="right-controller" controller-cursor-if-present
+          <a-entity id="right-controller"
+            controller-cursor-if-present
             oculus-touch-controls="hand:right"
             vive-controls="hand:right"
             daydream-controls="hand:right"
-            gearvr-controls="hand:right"></a-entity>
-          <a-entity id="left-controller" controller-cursor-if-present
+            gearvr-controls="hand:right">
+          </a-entity>
+          <a-entity id="left-controller"
+            controller-cursor-if-present
             oculus-touch-controls="hand:left"
             vive-controls="hand:left"
             daydream-controls="hand:left"
-            gearvr-controls="hand:left"></a-entity>
+            gearvr-controls="hand:left">
+          </a-entity>
           {this.props.localVideos.length > 0 ?
             <MeetToolbar
               isHidden={this.state.isToolbarHidden}
