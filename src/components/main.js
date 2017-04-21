@@ -191,6 +191,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
                 return connection.video.index === VideoControlStore.videoIndex;
             });
             this.setState({
+                threeSixty: false,
                 mainVideoConnection: {
                     connection: mainConnection,
                     type: 'local',
@@ -201,6 +202,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
         if (VideoControlStore.videoType === 'separate') {
             var id = VideoControlStore.videoIndex;
             this.setState({
+                threeSixty: true,
                 mainVideoConnection: {
                     id: id,
                     type: 'separate',
@@ -212,6 +214,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
                 return connection.video.index === VideoControlStore.videoIndex;
             });
             this.setState({
+                threeSixty: false,
                 mainVideoConnection: {
                     connection: mainConnection,
                     type: 'remote',
