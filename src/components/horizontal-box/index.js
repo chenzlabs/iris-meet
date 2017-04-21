@@ -35,11 +35,6 @@ const HorizontalBoxComponent = ({children, onClick}) => {
     }
   }
 
-  var video;
-  var el = children;
-    if (el && el.props.video && el.props.video.track && el.props.video.track.containers) { 
-      video = el.props.video.track.containers[0]; 
-    }
   if (!video) {
     // no video?  show sky color
     return (<a-plane class=".horizontal-box" position="0 0 -1.8" color="#3CF" onClick={onClick}>{children}</a-plane>);
