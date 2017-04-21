@@ -46,6 +46,10 @@ const HorizontalBoxComponent = ({children, onClick}) => {
   } else {
     // show video as sky, or plane
     var videoSelector = video ? '#' + video.id : '';
+    var videoEl = document.getElementById(video.id);
+    if (videoEl && videoEl.poster) {
+      videoSelector = videoEl.poster;
+    }
     // if (threeSixty) { return (<a-sky class=".horizontal-box" rotation="0 -90 0" src={videoSelector}>{children}</a-sky>); }
     return (<a-plane class=".horizontal-box" position="0 0 -1.8" src={videoSelector} onClick={onClick}>{children}</a-plane>);
   }

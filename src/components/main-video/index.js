@@ -43,7 +43,11 @@ const MainVideo = ({children, threeSixty}) => {
 
       // if paused, start playing (poster doesn't show)
       var videoEl = document.getElementById(video.id);
-      if (videoEl.paused) { videoEl.play(); }
+      if (videoEl.paused) {
+        console.log("main-video videoEl paused, so clearing cache and playing");
+	delete document.querySelector('a-scene').systems.material.textureCache[video.id];
+        videoEl.play();
+      }
 
       // try NOT showing the children again as they have duplicate IDs
       if (threeSixty) { return (<a-sky class=".main-video" rotation="0 -90 0" src={videoSelector}></a-sky>); }

@@ -398,7 +398,10 @@ export default withWebRTC(withRouter(class Main extends React.Component {
               ) : null;
           })}
 	  <HorizontalBox key='panoVideo' type='separate' id='panoVideo'>
-	    <SeparateVideo poster='https://chenz.org/mc-aframe360player/magicians-brakebills-vlcsnap-2017-01-31-14h44m31s535.jpg' src='https://videos.littlstar.com/e0ce24f3-f6e4-46ef-8c9b-f82b439c531f/web.mp4' id='panoVideo' />
+	    <SeparateVideo
+              src='https://videos.littlstar.com/e0ce24f3-f6e4-46ef-8c9b-f82b439c531f/web.mp4'
+              poster='https://chenz.org/mc-aframe360player/magicians-brakebills-vlcsnap-2017-01-31-14h44m31s535.png'
+              id='panoVideo' />
           </HorizontalBox>
           <HorizontalBox key='panoImage' type='separate' id='panoImage'>
             <SeparateImg src='https://chenz.org/R0010070.JPG' id='panoImage' />
