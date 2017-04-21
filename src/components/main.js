@@ -340,12 +340,24 @@ export default withWebRTC(withRouter(class Main extends React.Component {
             position="0 0 -1"
             geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
             material="color: blue; shader: flat">
-  <a-animation begin="click" dur="200" easing="ease-in" attribute="scale"
-               fill="backwards" from="0.1 0.1 0.1" to="1 1 1"></a-animation>
-  <a-animation begin="cursor-fusing" dur="2000" easing="ease-in" attribute="scale"
-               fill="forwards" from="1 1 1" to="0.1 0.1 0.1"></a-animation>
+        <a-animation begin="mouseleave" easing="ease-in" attribute="scale" dur="100"
+               fill="forwards" from="0.2 0.2 0.2" to="1 1 1"></a-animation>
+        <a-animation begin="click" easing="ease-in" attribute="scale" dur="100"
+               fill="forwards" from="1 1 1" to="0.2 0.2 0.2"></a-animation>
+        <a-animation begin="cursor-fusing" easing="ease-in" attribute="scale" dur="2000"
+               fill="forwards" from="1 1 1" to="0.2 0.2 0.2"></a-animation>
   </a-entity>
           </a-camera>
+          <a-entity id="right-controller" controller-cursor-if-present
+            oculus-touch-controls="hand:right"
+            vive-controls="hand:right"
+            daydream-controls="hand:right"
+            gearvr-controls="hand:right"></a-entity>
+          <a-entity id="left-controller" controller-cursor-if-present
+            oculus-touch-controls="hand:left"
+            vive-controls="hand:left"
+            daydream-controls="hand:left"
+            gearvr-controls="hand:left"></a-entity>
           {this.props.localVideos.length > 0 ?
             <MeetToolbar
               isHidden={this.state.isToolbarHidden}

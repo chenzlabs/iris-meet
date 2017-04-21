@@ -22,10 +22,126 @@
         /* make sure A-Frame scene takes up fullscreen, or else enter-VR button won't show */
         a-scene { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
     </style>
+
+<!-- make tracked controllers emit cursor events on down/up events -->
+<script>
+  AFRAME.registerComponent('controller-cursor', {
+    dependencies: ['cursor'],
+
+    // daydream-controller doesn't have a trigger.
+    schema: {
+      downEvents: { type: 'array', default: ['triggerdown', 'trackpaddown']},
+      upEvents: { type: 'array', default: ['triggerup', 'trackpadup']},
+    },
+    
+    init: function () {
+      this.onDown = this.onDown.bind(this);
+      this.onUp = this.onUp.bind(this);
+    },
+    
+    play: function () {
+      var el = this.el;
+      // Samsung Internet doesn't like ES6 syntax!
+      this.data.downEvents.forEach(function (eventName) { el.addEventListener(eventName, this.onDown); });
+      this.data.upEvents.forEach(function (eventName) { el.addEventListener(eventName, this.onUp); });
+    },
+    
+    pause: function () {
+      var el = this.el;
+      // Samsung Internet doesn't like ES6 syntax!
+      this.data.downEvents.forEach(function (eventName) { el.removeEventListener(eventName, this.onDown); });
+      this.data.upEvents.forEach(function (eventName) { el.removeEventListener(eventName, this.onUp); });
+    },
+    
+    onDown: function (evt) { this.el.components.cursor.onMouseDown(); },
+    onUp: function (evt) { this.el.components.cursor.onMouseUp(); },
+  });
+</script>
+
+<!-- emit controllerpresent when tracked-controls injected, with which higher-level component is present -->
+<script>
+  AFRAME.registerComponent('which-controller-present', {
+    init: function () {
+      this.el.addEventListener('componentinitialized', (function (evt) {
+        if (evt.detail.name !== 'tracked-controls') { return; }
+        // Determine which, if any, higher level controller component says controllerPresent.
+        // WARNING!  If a dummy tracked-controls instance is already present,
+        // then componentinitialized may not fire for true injection!
+        Object.keys(this.el.components).forEach(function (name) {
+          const component = this.el.components[name];
+          if (component.controllerPresent) {
+            // Log name, component data, and tracked-controls data.
+            console.log(name + ' ' +  JSON.stringify(component.data) + ' => ' + JSON.stringify(evt.detail.data));
+            
+            // Emit controllerpresent event.
+            this.el.emit('controllerpresent', {name: name, component: component});
+          }
+        });
+      }).bind(this));
+    }
+  });
+</script>
+
+<!-- syntactical sugar for CSS class clickable for entities to be returned by cursor raycasters -->
+<script>
+  AFRAME.registerComponent('clickable', {
+    init: function () { this.el.classList.add('clickable'); },
+    remove: function () { this.el.classList.remove('clickable'); }
+  });
+</script>
+
+<script>
+AFRAME.registerComponent('controller-cursor-if-present', {
+  dependencies: ['which-controller-present'],
+
+  init: function () {
+    var el = this.el;
+    el.addEventListener('controllerpresent', function (evt) {
+      // Since we have a controller, add raycaster and controller cursor.
+      evt.target.setAttribute('raycaster', 'far:100; interval:250; objects:.clickable');
+      evt.target.setAttribute('controller-cursor', '');
+      var indicator = document.createElement('a-box');
+      indicator.setAttribute('position', '0 0 -10');
+      indicator.setAttribute('depth', '20');
+      indicator.setAttribute('width', '0.01');
+      indicator.setAttribute('height', '0.001');
+      indicator.setAttribute('color', '#248');
+      evt.target.appendChild(indicator);
+
+      // Since we have a controller, make visible.
+      evt.target.setAttribute('visible', true);
+
+      // Since we have a controller, remove gaze cursor.
+      var cameraCursorEl = document.querySelector('a-camera a-entity[cursor]');
+      if (cameraCursorEl) {
+        cameraCursorEl.parentElement.removeChild(cameraCursorEl);
+      }
+    });
+  }
+});
+</script>
+
 </head>
 <body>
     <div id="target">Loading ...</div>
     <script src="iris-rtc-js-sdk.1.0.23.js"></script>
+<script>
+  // handle 2D browser window click
+  // also happening for Daydream
+  // need to make sure it doesn't fire for Vive/Touch though (two cursors)
+  function raycast2DClick() {
+    // Samsung Internet doesn't like forEach directly from querySelectorAll!
+    Array.prototype.slice.call(document.querySelectorAll('[cursor]')).forEach(function (cursorEl) {
+      var raycaster = cursorEl.components.raycaster;
+      if (raycaster.intersectedEls && raycaster.intersectedEls.length) {
+        var el = raycaster.intersectedEls[0];
+        el.dispatchEvent(new CustomEvent('click', {detail: {el: el}})); 
+      }
+    });
+  }
+  window.addEventListener('click', raycast2DClick);
+  window.addEventListener('keydown', function(evt) { if (evt.keyCode === 13) { raycast2DClick(); } });
+</script>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
