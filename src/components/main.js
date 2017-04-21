@@ -18,6 +18,10 @@ import validResolution from '../utils/verify-resolution';
 import { getRoomId } from '../api/RoomId';
 import './style.css'
 
+const SeparateID = (props) => { return (<div>id {props.id}</div>); }
+const SeparateVideo = (props) => { return (<video id={props.id} src={props.src} poster={props.poster} crossOrigin='anonymous' playsInline loop></video>); }
+const SeparateImg = (props) => { return (<img id={props.id} src={props.src} crossOrigin='anonymous'></img>); }
+
 export default withWebRTC(withRouter(class Main extends React.Component {
     constructor(props) {
         super(props);
@@ -193,6 +197,16 @@ export default withWebRTC(withRouter(class Main extends React.Component {
                 }}, () => {
                     console.log('MainVideo: local');
                 });
+        } else 
+        if (VideoControlStore.videoType === 'separate') {
+            var id = VideoControlStore.videoIndex;
+            this.setState({
+                mainVideoConnection: {
+                    id: id,
+                    type: 'separate',
+                }}, () => {
+                    console.log('MainVideo: separate:' + id);
+                });
         } else {
             const mainConnection = this.props.remoteVideos.find((connection) => {
                 return connection.video.index === VideoControlStore.videoIndex;
@@ -339,18 +353,21 @@ export default withWebRTC(withRouter(class Main extends React.Component {
               onThreeSixty={this._onThreeSixty.bind(this)}
         /> : null}
       <MainVideo threeSixty={this.state.threeSixty}>
-        {this.state.mainVideoConnection.type === 'remote' ?
+        { this.state.mainVideoConnection.type === 'remote' ?
           <RemoteVideo
             video={this.state.mainVideoConnection.connection.video}
             audio={this.state.mainVideoConnection.connection.audio}
-          /> : null
-        }
-        {this.state.mainVideoConnection.type === 'local' ?
+          />
+        : null}
+	{ this.state.mainVideoConnection.type === 'local' ?
           <LocalVideo
             video={this.state.mainVideoConnection.connection.video}
             audio={this.state.mainVideoConnection.connection.audio}
-          /> : null
-        }
+          />
+        : null }
+	{ this.state.mainVideoConnection.type === 'separate' ?
+          <SeparateID id={this.state.mainVideoConnection.id} />
+        : null }
       </MainVideo>
       <HorizontalWrapper isHidden={this.state.isVideoBarHidden}>
           {this.props.localVideos.map((connection) => {
@@ -380,6 +397,12 @@ export default withWebRTC(withRouter(class Main extends React.Component {
                 </HorizontalBox>
               ) : null;
           })}
+	  <HorizontalBox key='panoVideo' type='separate' id='panoVideo'>
+	    <SeparateVideo poster='https://chenz.org/mc-aframe360player/magicians-brakebills-vlcsnap-2017-01-31-14h44m31s535.jpg' src='https://videos.littlstar.com/e0ce24f3-f6e4-46ef-8c9b-f82b439c531f/web.mp4' id='panoVideo' />
+          </HorizontalBox>
+          <HorizontalBox key='panoImage' type='separate' id='panoImage'>
+            <SeparateImg src='https://chenz.org/R0010070.JPG' id='panoImage' />
+          </HorizontalBox>
       </HorizontalWrapper>
       {this.state.showUser || this.state.showRoom ?
         <LoginPanel

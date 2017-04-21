@@ -15,6 +15,28 @@ const HorizontalBoxComponent = ({children, onClick}) => {
   // Find the video (if any) in the children we've been asked to display
   var video;
   var el = children;
+  if (el) {
+    // iris has video track with containers
+    if (el.props.video && el.props.video.track && el.props.video.track.containers) {
+      video = el.props.video.track.containers[0];
+    } else
+    // maybe the child was passed a video element
+    if (el.props.video && el.props.video.id) {
+      video = el.props.video;
+    } else
+    // maybe the child was passed an image element
+    if (el.props.image && el.props.image.id) {
+      video = el.props.image;
+    } else
+    // maybe the child was passed an element id
+    if (el.props.id) {
+      video = {id: el.props.id};
+    } else {
+    }
+  }
+
+  var video;
+  var el = children;
     if (el && el.props.video && el.props.video.track && el.props.video.track.containers) { 
       video = el.props.video.track.containers[0]; 
     }
