@@ -15,10 +15,19 @@ const HorizontalWrapper = ({isHidden, children}) => {
   }
 
   // we want to emit an entity wrapper around each child
-  var i=0, filteredChildren = children.filter(function(ch) {
-      // filter out empty arrays
-      return ch && (Array.isArray(ch) ? ch.length : true); 
-  }), len=filteredChildren.length, theta=30; 
+  var filteredChildren = [];
+  children.forEach(function(ch) {
+      if (!ch) { return; }
+      if (Array.isArray(ch)) {
+        for (var i=0; i<ch.length; i++) {
+          filteredChildren.push(ch[i]);
+        }
+      } else {
+        filteredChildren.push(ch);
+      }
+  });
+  var i=0;
+  var len=filteredChildren.length, theta=30; 
   var wrappedChildren = filteredChildren.map(function(el) { 
       var rotation = "0 " + (theta*(i - (len-1)/2.0)) + " 0";
       i++;
