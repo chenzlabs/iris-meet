@@ -338,7 +338,7 @@ export default withWebRTC(withRouter(class Main extends React.Component {
           <a-camera wasd-controls-enabled="false" arrow-key-rotation>
   <a-entity id="camera-cursor" 
             cursor="fuse:true; fuseTimeout:2000"
-            raycaster="far:100; interval:250"
+            raycaster="far:100; interval:250; objects:.clickable"
             position="0 0 -1"
             geometry="primitive:ring; radiusInner:0.02; radiusOuter:0.03"
             material="color:blue; shader:flat">

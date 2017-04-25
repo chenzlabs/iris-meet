@@ -37,7 +37,7 @@ const HorizontalBoxComponent = ({children, onClick}) => {
 
   if (!video) {
     // no video?  show sky color
-    return (<a-plane class=".horizontal-box" position="0 0 -1.8" color="#3CF" onClick={onClick}>{children}</a-plane>);
+    return (<a-plane class="horizontal-box clickable" position="0 0 -1.8" color="#3CF" onClick={onClick}>{children}</a-plane>);
   } else {
     // show video as sky, or plane
     var videoSelector = video ? '#' + video.id : '';
@@ -46,7 +46,7 @@ const HorizontalBoxComponent = ({children, onClick}) => {
       videoSelector = videoEl.poster;
     }
     // if (threeSixty) { return (<a-sky class=".horizontal-box" rotation="0 -90 0" src={videoSelector}>{children}</a-sky>); }
-    return (<a-plane class=".horizontal-box" position="0 0 -1.8" src={videoSelector} onClick={onClick}>{children}</a-plane>);
+    return (<a-plane class="horizontal-box clickable" position="0 0 -1.8" color="#FFF" src={videoSelector} onClick={onClick}>{children}</a-plane>);
   }
 }
 

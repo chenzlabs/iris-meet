@@ -4,9 +4,9 @@ import './meet-toolbar.css'
 
 const MeetToolbarComponent = ({isHidden, _onMicrophoneMute, microphoneMuted, _onCameraMute, cameraMuted, _onExpandHide, barHidden, _onHangup, threeSixty, _onThreeSixty}) => (
 <a-entity position="0 2.5 -1.5">
-  <a-plane color="#333" position="-0.225 0 0" width="0.2" height="0.1" text={"color:#fff; align:center; wrapCount:8; value:" + (microphoneMuted ? "Muted" : "Mic On")} onClick={_onMicrophoneMute.bind(this)}></a-plane>
-  <a-plane color="#333" position="0 0 0" width="0.2" height="0.1" text={"color:#fff; align:center; wrapCount:9; value:" + (cameraMuted ? "No Video" : "Cam On")} onClick={_onCameraMute.bind(this)}></a-plane>
-  <a-plane color="#333" position="0.225 0 0" width="0.2" height="0.1" text={"color:#fff; align:center; wrapCount:5; value:" + (threeSixty ? "2D" : "360")} onClick={_onThreeSixty.bind(this)}></a-plane>
+  <a-plane class="clickable" color="#333" position="-0.225 0 0" width="0.2" height="0.1" text={"color:#fff; align:center; wrapCount:8; value:" + (microphoneMuted ? "Muted" : "Mic On")} onClick={_onMicrophoneMute.bind(this)}></a-plane>
+  <a-plane class="clickable" color="#333" position="0 0 0" width="0.2" height="0.1" text={"color:#fff; align:center; wrapCount:9; value:" + (cameraMuted ? "No Video" : "Cam On")} onClick={_onCameraMute.bind(this)}></a-plane>
+  <a-plane class="clickable" color="#333" position="0.225 0 0" width="0.2" height="0.1" text={"color:#fff; align:center; wrapCount:5; value:" + (threeSixty ? "2D" : "360")} onClick={_onThreeSixty.bind(this)}></a-plane>
   <div id="header">
     <span id="toolbar" className={isHidden ? "toolbarHide" : "toolbarShow"}>
       <a className="button" onClick={_onMicrophoneMute.bind(this)}>{microphoneMuted ?
