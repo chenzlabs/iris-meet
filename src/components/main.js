@@ -350,20 +350,10 @@ export default withWebRTC(withRouter(class Main extends React.Component {
                fill="forwards" from="1 1 1" to="0.2 0.2 0.2"></a-animation>
   </a-entity>
           </a-camera>
-          <a-entity id="right-controller"
-            controller-cursor-if-present
-            oculus-touch-controls="hand:right"
-            vive-controls="hand:right"
-            daydream-controls="hand:right"
-            gearvr-controls="hand:right">
-          </a-entity>
-          <a-entity id="left-controller"
-            controller-cursor-if-present
-            oculus-touch-controls="hand:left"
-            vive-controls="hand:left"
-            daydream-controls="hand:left"
-            gearvr-controls="hand:left">
-          </a-entity>
+
+          <a-entity id="right-controller" controller-with-cursor-if-present="right"></a-entity>
+          <a-entity id="left-controller" controller-with-cursor-if-present="left"></a-entity>
+
           {this.props.localVideos.length > 0 ?
             <MeetToolbar
               isHidden={this.state.isToolbarHidden}
