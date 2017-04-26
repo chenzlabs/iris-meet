@@ -50,8 +50,8 @@ const MainVideo = ({children, threeSixty}) => {
       }
 
       // try NOT showing the children again as they have duplicate IDs
-      if (threeSixty) { return (<a-sky class=".main-video" rotation="0 -90 0" src={videoSelector}></a-sky>); }
-      return (<a-plane class=".main-video" scale="4.8 2.7 1" position="0 1.6 -2" src={videoSelector}></a-plane>);
+      if (threeSixty) { return (<a-sky class=".main-video" rotation="0 -90 0" color="#FFF" src={videoSelector}></a-sky>); }
+      return (<a-plane class=".main-video" scale="4.8 2.7 1" position="0 1.6 -2" color="#FFF" src={videoSelector}></a-plane>);
     }
 };
 
